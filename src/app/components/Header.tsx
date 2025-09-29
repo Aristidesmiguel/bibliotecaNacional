@@ -1,9 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Search, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export const Header = () => {
+  const navigate = useNavigate()
+  const router = (path: string) => {
+    navigate(path)
+  }
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
@@ -34,10 +38,10 @@ export const Header = () => {
             Contact
           </Link>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm">
+            <Button onClick={() => router("/login")} variant="ghost" size="sm">
               Entrar
             </Button>
-            <Button size="sm" className="bg-primary hover:bg-primary/90 cursor-pointer">
+            <Button onClick={() => router("/sign-in")} size="sm" className="bg-primary hover:bg-primary/90 cursor-pointer">
               Cadastrar
             </Button>
           </div>

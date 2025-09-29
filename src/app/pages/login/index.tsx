@@ -158,7 +158,7 @@ export const Login: React.FC = () => {
           }}
         >
           Não tem uma conta?{" "}
-          <a href="/signup" style={{ color: "#1f2937", fontWeight: "bold" }}>
+          <a href="/Sign-in" style={{ color: "#1f2937", fontWeight: "bold" }}>
             Cadastre-se
           </a>
         </p>

@@ -105,7 +105,7 @@ export const SignIn: React.FC = () => {
             boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
           }}
         >
-          {/* Título e subtítulo alinhados à esquerda dentro do card */}
+          {/* Título e subtítulo alinhados à esquerda dentro do card */} 
           <h3
             style={{
               fontSize: "18px",

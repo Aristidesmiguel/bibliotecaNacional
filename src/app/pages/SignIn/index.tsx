@@ -56,13 +56,8 @@ export const SignIn: React.FC = () => {
         fontFamily: "Inter, system-ui, sans-serif",
       }}
     >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "400px",
-        }}
-      >
-        {/* Cabeçalho fora do card */}
+      <div style={{ width: "100%", maxWidth: "400px" }}>
+        {/* Cabeçalho */}
         <h1
           style={{
             textAlign: "center",
@@ -105,7 +100,6 @@ export const SignIn: React.FC = () => {
             boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
           }}
         >
-          {/* Título e subtítulo alinhados à esquerda dentro do card */} 
           <h3
             style={{
               fontSize: "18px",
@@ -218,11 +212,12 @@ export const SignIn: React.FC = () => {
               </p>
             )}
 
+            {/* Botão Criar conta (cor igual à página de login) */}
             <button
               type="submit"
               disabled={loading}
               style={{
-                backgroundColor: "#374151",
+                backgroundColor: "#1f2937", // vermelho (igual login)
                 color: "#fff",
                 padding: "12px",
                 border: "none",
@@ -237,6 +232,35 @@ export const SignIn: React.FC = () => {
             </button>
           </form>
 
+          {/* Botão Google */}
+          <div style={{ marginTop: "18px" }}>
+            <button
+              type="button"
+              style={{
+                background: "#fff",
+                color: "#444",
+                padding: "12px",
+                border: "1px solid #ccc",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontWeight: "bold",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+                width: "100%",
+              }}
+            >
+              <img
+                src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png"
+                alt="Google Logo"
+                style={{ width: "28px", height: "28px" }}
+              />
+              Entrar com Google
+            </button>
+          </div>
+
+          {/* Link para login */}
           <p
             style={{
               marginTop: "18px",

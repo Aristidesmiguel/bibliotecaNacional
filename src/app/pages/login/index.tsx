@@ -131,7 +131,7 @@ export const Login: React.FC = () => {
             </p>
           )}
 
-          {/* Botão */}
+          {/* Botão principal */}
           <button
             type="submit"
             disabled={loading}
@@ -143,9 +143,36 @@ export const Login: React.FC = () => {
               borderRadius: "6px",
               cursor: "pointer",
               fontWeight: "bold",
+              marginBottom: "10px",
             }}
           >
             {loading ? "Entrando..." : "Entrar"}
+          </button>
+
+          {/* Botão de login com Google (ainda não funcional) */}
+          <button
+            type="button"
+            style={{
+              background: "#fff",
+              color: "#444",
+              padding: "10px",
+              border: "1px solid #ccc",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+            }}
+          >
+            <img
+            src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png"
+            alt="Google Logo"
+            style={{ width: "24px", height: "24px" }}
+            />
+
+            Entrar com Google
           </button>
         </form>
 

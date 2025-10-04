@@ -28,17 +28,17 @@ export const Header = () => {
         </div>
 
         <nav className="flex items-center gap-6">
-          <Link to="/catalog" className="text-sm font-medium hover:text-accent transition-colors">
+          <Link to="/catalog" className="text-sm font-medium hover:text-gray-500 transition-colors">
             Catalog
           </Link>
-          <Link to="/about" className="text-sm font-medium hover:text-accent transition-colors">
+          <Link to="/about" className="text-sm font-medium hover:text-gray-500 transition-colors">
             About
           </Link>
-          <Link to="/contact" className="text-sm font-medium hover:text-accent transition-colors">
+          <Link to="/contact" className="text-sm font-medium hover:text-gray-500 transition-colors">
             Contact
           </Link>
           <div className="flex items-center gap-2">
-            <Button onClick={() => router("/login")} variant="ghost" size="sm">
+            <Button onClick={() => router("/login")} variant="ghost" size="sm" className="cursor-pointer">
               Entrar
             </Button>
             <Button onClick={() => router("/sign-in")} size="sm" className="bg-primary hover:bg-primary/90 cursor-pointer">

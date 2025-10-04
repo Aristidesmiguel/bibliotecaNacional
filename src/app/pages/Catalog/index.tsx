@@ -7,7 +7,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowUpDown } from "lucide-react";
 import { books } from "@/app/data/books";
-import { BookCard, Footer, Header } from "@/app/components";
+import { BookCard, Footer, Header, LockCard } from "@/app/components";
 
 export const Catalog = () => {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -45,6 +45,7 @@ export const Catalog = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <LockCard />
       <Header />
       
       <main className="flex-1 bg-muted/30">

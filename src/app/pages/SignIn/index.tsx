@@ -1,3 +1,5 @@
+import { useAuth } from "@/app/hooks/useAurh";
+import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 
 interface FormData {
@@ -14,6 +16,8 @@ export const SignIn: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
+
+  const {signUpWithEmailAndPassword, entering} = useAuth()
 
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
@@ -35,8 +39,7 @@ export const SignIn: React.FC = () => {
     }
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("Conta criada com sucesso!");
+      await signUpWithEmailAndPassword(formData)
       console.log("Formulário enviado:", formData);
     } catch {
       setErro("Erro inesperado. Tente novamente.");
@@ -44,6 +47,7 @@ export const SignIn: React.FC = () => {
       setLoading(false);
     }
   };
+
 
   return (
     <div
@@ -213,9 +217,10 @@ export const SignIn: React.FC = () => {
             )}
 
             {/* Botão Criar conta (cor igual à página de login) */}
-            <button
+            <Button
               type="submit"
               disabled={loading}
+               
               style={{
                 backgroundColor: "#1f2937", // vermelho (igual login)
                 color: "#fff",
@@ -229,7 +234,7 @@ export const SignIn: React.FC = () => {
               }}
             >
               {loading ? "Criando conta..." : "Criar conta"}
-            </button>
+            </Button>
           </form>
 
           {/* Botão Google */}

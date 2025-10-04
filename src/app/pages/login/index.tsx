@@ -1,3 +1,4 @@
+import { useAuth } from "@/app/hooks/useAurh";
 import React, { useState } from "react";
 
 export const Login: React.FC = () => {
@@ -13,24 +14,11 @@ export const Login: React.FC = () => {
     setErro("");
     setLoading(true);
 
+    const { loginWithEmail } = useAuth()
+
     try {
       // chamada da api substituir pela biblioteca
-      const response = await fetch("http://api.bibliotecanacional.gov/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, senha }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("Login realizado com sucesso!");
-        localStorage.setItem("token", data.token);
-        // mudar depois rota
-        window.location.href = "/profile";
-      } else {
-        setErro("Erro de conexão com o servidor");
-      }
+      await loginWithEmail(email, senha)
     } catch (error) {
       setErro("Erro inesperado. Tente novamente.");
     } finally {

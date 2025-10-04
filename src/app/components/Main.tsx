@@ -19,7 +19,7 @@ export const Main = () => {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <Link to="/catalog">
-              <Button size="lg" variant="secondary" className="group">
+              <Button size="lg" variant="secondary" className="group cursor-pointer">
                 Browse Catalog
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>

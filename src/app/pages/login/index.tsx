@@ -1,33 +1,52 @@
+import { Header } from "@/app/components";
 import { useAuth } from "@/app/hooks/useAurh";
+import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
+import { toast } from "sonner";
 
 export const Login: React.FC = () => {
+  const { loginWithEmail, entering, loginWithGoogle } = useAuth();
   // parte para saber o email senha e feedback
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
-  const [erro, setErro] = useState("");
 
-  // função de submissão de formulário
+  // Função para lidar com o envio do formulário
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErro("");
     setLoading(true);
 
-    const { loginWithEmail } = useAuth()
-
     try {
-      // chamada da api substituir pela biblioteca
-      await loginWithEmail(email, senha)
-    } catch (error) {
-      setErro("Erro inesperado. Tente novamente.");
+      await loginWithEmail(email, senha);
+    } catch (error: any) {
+      console.error("Erro no login:", error);
+      if (error.code === "auth/invalid-email") {
+        toast("E-mail inválido.");
+      } else if (error.code === "auth/user-not-found") {
+        toast("Usuário não encontrado.");
+      } else if (error.code === "auth/wrong-password") {
+        toast("Senha incorreta.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
+  const signInWithGoogle = async () => {
+    // Implementar login com Google
+    try {
+      await loginWithGoogle();
+      window.location.href = "/catalog"; // Redireciona para a página do catálogo após login
+    } catch {
+      toast("Erro ao entrar com Google. Tente novamente.");
+    }
+  };
+
   return (
     // Aqui são elementos JSX ou seja, elementos HTML dentro do JavaScript
+   <main className="h-screen overflow-hidden">
+     <Header type="minimal" />
     <div
       style={{
         minHeight: "100vh",
@@ -76,7 +95,9 @@ export const Login: React.FC = () => {
           onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column" }}
         >
-          <label style={{ marginBottom: "5px", fontWeight: "bold" }}>Email</label>
+          <label style={{ marginBottom: "5px", fontWeight: "bold" }}>
+            Email
+          </label>
           <input
             type="email"
             value={email}
@@ -91,7 +112,9 @@ export const Login: React.FC = () => {
             }}
           />
 
-          <label style={{ marginBottom: "5px", fontWeight: "bold" }}>Senha</label>
+          <label style={{ marginBottom: "5px", fontWeight: "bold" }}>
+            Senha
+          </label>
           <input
             type="password"
             value={senha}
@@ -106,23 +129,11 @@ export const Login: React.FC = () => {
             }}
           />
 
-          {/* Mensagem de erro */}
-          {erro && (
-            <p
-              style={{
-                color: "red",
-                fontSize: "14px",
-                marginBottom: "10px",
-              }}
-            >
-              {erro}
-            </p>
-          )}
-
           {/* Botão principal */}
-          <button
+          <Button
             type="submit"
             disabled={loading}
+            isLoading={entering}
             style={{
               background: "#1f2937",
               color: "#fff",
@@ -135,10 +146,11 @@ export const Login: React.FC = () => {
             }}
           >
             {loading ? "Entrando..." : "Entrar"}
-          </button>
+          </Button>
 
           {/* Botão de login com Google (ainda não funcional) */}
           <button
+            onClick={signInWithGoogle}
             type="button"
             style={{
               background: "#fff",
@@ -155,11 +167,10 @@ export const Login: React.FC = () => {
             }}
           >
             <img
-            src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png"
-            alt="Google Logo"
-            style={{ width: "24px", height: "24px" }}
+              src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png"
+              alt="Google Logo"
+              style={{ width: "24px", height: "24px" }}
             />
-
             Entrar com Google
           </button>
         </form>
@@ -179,5 +190,6 @@ export const Login: React.FC = () => {
         </p>
       </div>
     </div>
+   </main>
   );
 };

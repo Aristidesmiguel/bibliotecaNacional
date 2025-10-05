@@ -1,6 +1,8 @@
+import { Header } from "@/app/components";
 import { useAuth } from "@/app/hooks/useAurh";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
+import { toast } from "sonner";
 
 interface FormData {
   name: string;
@@ -17,10 +19,9 @@ export const SignIn: React.FC = () => {
     confirmPassword: "",
   });
 
-  const {signUpWithEmailAndPassword, entering} = useAuth()
+  const { signUpWithEmailAndPassword, entering, loginWithGoogle } = useAuth();
 
   const [loading, setLoading] = useState(false);
-  const [erro, setErro] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -29,40 +30,58 @@ export const SignIn: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErro("");
     setLoading(true);
 
     if (formData.password !== formData.confirmPassword) {
-      setErro("As senhas não coincidem!");
+      toast.info("As senhas não coincidem!");
       setLoading(false);
       return;
     }
 
     try {
-      await signUpWithEmailAndPassword(formData)
-      console.log("Formulário enviado:", formData);
+      await signUpWithEmailAndPassword(formData);
+      toast("Conta criada com sucesso.");
     } catch {
-      setErro("Erro inesperado. Tente novamente.");
+      toast("Erro inesperado. Tente novamente.");
     } finally {
       setLoading(false);
     }
   };
 
+  const signInWithGoogle = async () => {
+    // Implementar login com Google
+    try {
+      await loginWithGoogle();
+      window.location.href = "/catalog"; // Redireciona para a página do catálogo após login
+    } catch {
+      toast("Erro ao entrar com Google. Tente novamente.");
+    }
+  };
 
   return (
-    <div
+    <main className="h-screen overflow-hidden">
+      <Header type="minimal" />
+      <div
       style={{
-        minHeight: "100vh",
+        minHeight: "90vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#fff",
+        backgroundColor: "#f8f9fa",
         fontFamily: "Inter, system-ui, sans-serif",
       }}
     >
       <div style={{ width: "100%", maxWidth: "400px" }}>
-        {/* Cabeçalho */}
-        <h1
+        {/* Card */}
+        <div
+          style={{
+            backgroundColor: "#fff",
+            padding: "40px 32px",
+            borderRadius: "10px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+          }}
+        >
+          <h1
           style={{
             textAlign: "center",
             fontSize: "22px",
@@ -95,39 +114,18 @@ export const SignIn: React.FC = () => {
           Junte-se à nossa comunidade de leitores
         </p>
 
-        {/* Card */}
-        <div
-          style={{
-            backgroundColor: "#fff",
-            padding: "40px 32px",
-            borderRadius: "10px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-          }}
-        >
-          <h3
-            style={{
-              fontSize: "18px",
-              fontWeight: 700,
-              color: "#1f2937",
-              marginBottom: "4px",
-              textAlign: "left",
-            }}
+          <form
+            onSubmit={handleSubmit}
+            style={{ display: "flex", flexDirection: "column" }}
           >
-            Cadastro
-          </h3>
-          <p
-            style={{
-              color: "#6b7280",
-              fontSize: "14px",
-              marginBottom: "24px",
-              textAlign: "left",
-            }}
-          >
-            Preencha os dados abaixo para criar sua conta
-          </p>
-
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
-            <label style={{ marginBottom: "6px", fontWeight: 500, fontSize: "14px", color: "#111827" }}>
+            <label
+              style={{
+                marginBottom: "6px",
+                fontWeight: 500,
+                fontSize: "14px",
+                color: "#111827",
+              }}
+            >
               Nome completo
             </label>
             <input
@@ -146,7 +144,14 @@ export const SignIn: React.FC = () => {
               }}
             />
 
-            <label style={{ marginBottom: "6px", fontWeight: 500, fontSize: "14px", color: "#111827" }}>
+            <label
+              style={{
+                marginBottom: "6px",
+                fontWeight: 500,
+                fontSize: "14px",
+                color: "#111827",
+              }}
+            >
               Email
             </label>
             <input
@@ -165,7 +170,14 @@ export const SignIn: React.FC = () => {
               }}
             />
 
-            <label style={{ marginBottom: "6px", fontWeight: 500, fontSize: "14px", color: "#111827" }}>
+            <label
+              style={{
+                marginBottom: "6px",
+                fontWeight: 500,
+                fontSize: "14px",
+                color: "#111827",
+              }}
+            >
               Senha
             </label>
             <input
@@ -184,7 +196,14 @@ export const SignIn: React.FC = () => {
               }}
             />
 
-            <label style={{ marginBottom: "6px", fontWeight: 500, fontSize: "14px", color: "#111827" }}>
+            <label
+              style={{
+                marginBottom: "6px",
+                fontWeight: 500,
+                fontSize: "14px",
+                color: "#111827",
+              }}
+            >
               Confirmar senha
             </label>
             <input
@@ -203,24 +222,11 @@ export const SignIn: React.FC = () => {
               }}
             />
 
-            {erro && (
-              <p
-                style={{
-                  color: "red",
-                  fontSize: "14px",
-                  marginBottom: "12px",
-                  textAlign: "center",
-                }}
-              >
-                {erro}
-              </p>
-            )}
-
             {/* Botão Criar conta (cor igual à página de login) */}
             <Button
               type="submit"
               disabled={loading}
-               
+              isLoading={entering}
               style={{
                 backgroundColor: "#1f2937", // vermelho (igual login)
                 color: "#fff",
@@ -240,6 +246,7 @@ export const SignIn: React.FC = () => {
           {/* Botão Google */}
           <div style={{ marginTop: "18px" }}>
             <button
+              onClick={signInWithGoogle}
               type="button"
               style={{
                 background: "#fff",
@@ -282,5 +289,6 @@ export const SignIn: React.FC = () => {
         </div>
       </div>
     </div>
+    </main>
   );
 };

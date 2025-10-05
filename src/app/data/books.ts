@@ -1,13 +1,14 @@
 export interface Book {
-  id: number;
-  title: string;
-  author: string;
-  genre: string;
-  rating: number;
-  year: string;
-  available: number;
-  coverUrl: string;
+  id: number;              // ID do livro
+  title: string;           // Título
+  author: string;          // Autor
+  genre: string;           // Gênero literário
+  rating: number;          // Avaliação média
+  year: string;            // Ano de publicação
+  available: number;       // Quantidade disponível
+  coverUrl: string;        // URL da capa do livro
 }
+
 
 export const books: Book[] = [
   {

@@ -3,4 +3,6 @@ export * from "./Main";
 export * from "./Stats";
 export * from "./Footer";
 export * from "./BookCard";
-export * from "./block";
+export * from "./Block";
+export * from "./DropdownProfile";
+export * from "./BookModal";

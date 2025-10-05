@@ -7,7 +7,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowUpDown } from "lucide-react";
 import { books } from "@/app/data/books";
-import { BookCard, Footer, Header, LockCard } from "@/app/components";
+import { Footer, Header, LockCard, BookCard, BookModal, type BookCardProps } from "@/app/components";
 
 export const Catalog = () => {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -15,6 +15,21 @@ export const Catalog = () => {
   const [minRating, setMinRating] = useState([0]);
   const [yearRange, setYearRange] = useState([1900, 2024]);
   const [sortBy, setSortBy] = useState("title");
+  const [isOpen, setIsOpen] = useState(false);
+  const [book, setBook] = useState<BookCardProps>({
+    id: 0,
+  title: "",
+  author: "",
+  genre: "",
+  rating: 0,
+  year: "",
+  available: 0,
+  coverUrl: "",
+  });
+
+
+
+  // Extract unique genres from books data
 
   const genres = [...new Set(books.map(book => book.genre))];
 
@@ -47,7 +62,7 @@ export const Catalog = () => {
     <div className="min-h-screen flex flex-col">
       <LockCard />
       <Header />
-      
+      <BookModal  book={book} isOpen={isOpen} onClose={() => setIsOpen(false)}  />
       <main className="flex-1 bg-muted/30">
         <div className="container px-4 py-8">
           <div className="flex flex-col lg:flex-row gap-8">
@@ -155,7 +170,10 @@ export const Catalog = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {filteredBooks.map(book => (
-                  <BookCard key={book.id} {...book} />
+                  <BookCard onClick={() => {
+                    setBook(book);
+                    setIsOpen(true);
+                  }}  key={book.id} {...book} />
                 ))}
               </div>
 

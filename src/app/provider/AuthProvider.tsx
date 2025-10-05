@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { auth, db, googleProvider } from "../dataBase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { toast } from "sonner";
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -39,41 +40,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const loginWithEmail = async (
-    email: string,
-    password: string
-  ): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      try {
-        setEntering(true);
-        signInWithEmailAndPassword(auth, email, password)
-          .then(async () => {
-            const docRef = doc(db, "users", user?.uid ?? "");
-            const docSnap = await getDoc(docRef);
+const loginWithEmail = async (email: string, password: string): Promise<void> => {
+  try {
+    setEntering(true);
 
-            if (docSnap.exists()) {
-              const userData = docSnap.data();
-              localStorage.setItem("displayName", userData.displayName);
-              if (location.hostname === "localhost") {
-                location.href = "http://localhost:5173/perfil";
-              } else {
-                console.log("aconteceu um erro");
-                location.href = `http://localhost:5173/`;
-              }
-              resolve();
-            } else {
-              console.log("USER: ", user);
-              reject();
-            }
-          })
-          .catch(reject)
-          .finally(() => setEntering(false));
-      } catch (error) {
-        console.error("Erro ao fazer login com Google:", error);
-        reject(error);
-      }
-    });
-  };
+    const { user } = await signInWithEmailAndPassword(auth, email, password);
+
+    // usa o user.uid do resultado da autenticação
+    const docRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data();
+      localStorage.setItem("displayName", userData.displayName || "");
+
+      // redirecionamento (sem erro)
+      window.location.href = `${window.location.origin}/catalog`;
+      console.log("USER:", user);
+    } else {
+      console.warn("Usuário não encontrado no Firestore.");
+      throw new Error("Usuário não encontrado no Firestore.");
+    }
+  } catch (error) {
+    console.error("Erro ao fazer login com e-mail:", error);
+    throw error;
+  } finally {
+    setEntering(false);
+  }
+};
+
 
  const signUpWithEmailAndPassword = async (userData: {
   name: string;
@@ -103,7 +98,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   } catch (error: any) {
     console.error("Erro ao criar conta:", error.message);
     if (error.code === "auth/operation-not-allowed") {
-      alert("Método de autenticação desativado no Firebase Console!");
+      toast.info("Método de autenticação desativado no Firebase Console!");
     }
   } finally {
     setEntering(false);
@@ -119,7 +114,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("displayName", user.displayName);
 
     // Redireciona de forma dinâmica
-    window.location.href = `${window.location.origin}/perfil`;
+    window.location.href = `${window.location.origin}/catalog`;
   } catch (error) {
     console.error("Erro ao salvar usuário:", error);
   }

@@ -2,7 +2,8 @@ import { Star, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
-interface BookCardProps {
+export interface BookCardProps {
+  id: number;
   title: string;
   author: string;
   genre: string;
@@ -10,11 +11,12 @@ interface BookCardProps {
   year: string;
   available: number;
   coverUrl: string;
+  onClick?: () => void;
 }
 
-export const BookCard = ({ title, author, genre, rating, year, available, coverUrl }: BookCardProps) => {
+export const BookCard = ({ title, author, genre, rating, year, available, coverUrl, onClick }: BookCardProps) => {
   return (
-    <Card className="group overflow-hidden hover:shadow-lg transition-shadow">
+    <Card onClick={onClick} className="group overflow-hidden hover:shadow-lg transition-shadow">
       <div className="relative aspect-[2/3] overflow-hidden bg-muted">
         <img
           src={coverUrl}

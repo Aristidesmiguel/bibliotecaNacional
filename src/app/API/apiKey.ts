@@ -1,0 +1,1 @@
+export const CHAVE_API = 'AIzaSyB1GUCpnTvXLhR9MQEx7W9cIMtaJOB5Gfs';

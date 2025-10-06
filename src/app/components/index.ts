@@ -6,3 +6,4 @@ export * from "./BookCard";
 export * from "./Block";
 export * from "./DropdownProfile";
 export * from "./BookModal";
+export * from "./infoCard";

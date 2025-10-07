@@ -7,6 +7,7 @@ import {
   Timestamp,
   doc,
   updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { auth, db } from "./firebase";
 
@@ -28,6 +29,7 @@ export interface Listas {
   status: string;
 }
 
+//função para reservar livro
 export async function reservarLivro(book: any) {
   const user = auth.currentUser;
   if (!user) throw new Error("Usuário não autenticado");
@@ -64,6 +66,8 @@ export async function reservarLivro(book: any) {
   await addDoc(reservasRef, reserva);
   return reserva;
 }
+
+//função para adicionar livro na minha lista
 export async function minhaListaDeLivros(book: any) {
   const user = auth.currentUser;
   if (!user) throw new Error("Usuário não autenticado");
@@ -95,6 +99,7 @@ export async function minhaListaDeLivros(book: any) {
   return listagem;
 }
 
+//função para verificar reservas expiradas
 export async function verificarReservasExpiradas(reservas: Reserva[]) {
   const agora = Timestamp.now();
 
@@ -107,6 +112,7 @@ export async function verificarReservasExpiradas(reservas: Reserva[]) {
   }
 }
 
+//função para carregar reservas
 export async function carregarReservas(): Promise<Reserva[]> {
   const snapshot = await getDocs(collection(db, "reservas"));
   const reservas = snapshot.docs.map((doc) => ({
@@ -116,6 +122,8 @@ export async function carregarReservas(): Promise<Reserva[]> {
   return reservas;
 }
 
+
+//função para carregar listas
 export async function carregarListas(): Promise<Listas[]> {
   const snapshot = await getDocs(collection(db, "lists"));
   const lists = snapshot.docs.map((doc) => ({
@@ -125,14 +133,37 @@ export async function carregarListas(): Promise<Listas[]> {
   return lists;
 }
 
-export async function cancelarReserva(reservaId: string) {
- const listaRef = doc(db, "lists", reservaId);
-await updateDoc(listaRef, { status: "cancelada" });
+//função para cancelar reserva
+export async function cancelarReserva(id: string) {
+  const ref = doc(db, "reservas", id);
+  const snapshot = await getDoc(ref);
 
+  if (!snapshot.exists()) {
+    console.error(" Documento não encontrado:", id);
+    return;
+  }
+
+  try {
+    await updateDoc(ref, { reservado: false });
+    console.log("Reserva cancelada com sucesso");
+  } catch (error) {
+    console.error("Erro ao cancelar reserva:", error);
+  }
 }
-export async function cancelarListagem(reservaId: string) {
-  const reservaRef = doc(db, "reservas", reservaId);
-  await updateDoc(reservaRef, {
-    status: "cancelada",
-  });
+
+//função para cancelar listagem
+export async function cancelarListagem(id: string) {
+  const listRef = doc(db, "lists", id);
+  const snapshot = await getDoc(listRef);
+  if (!snapshot.exists()) {
+    console.error(" Documento não encontrado:", id);
+    return;
+  }
+  try {
+    await updateDoc(listRef, { status: "removido" });
+    console.log("Listagem cancelada com sucesso");
+  }
+  catch (error) {
+    console.error("Erro ao cancelar listagem:", error);
+  }
 }

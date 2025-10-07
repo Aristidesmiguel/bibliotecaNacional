@@ -75,7 +75,7 @@ export const Login: React.FC = () => {
             marginBottom: "5px",
           }}
         >
-          Biblioteca Nacional
+          Meridian Library
         </h1>
         <p
           style={{

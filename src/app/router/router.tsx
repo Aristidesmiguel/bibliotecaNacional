@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Catalog, Home, Login, Profile, SignIn } from "../pages";
+import {  BookPage, Catalog, Home, Login, Profile, SignIn } from "../pages";
 import { ProtetedRouter } from "./protetedRouter";
 
 export const router = createBrowserRouter([
@@ -25,10 +25,10 @@ export const router = createBrowserRouter([
   },
   {
     path: "/catalog",
-    element: 
-
-        <Catalog />
-      
-    ,
+    element: <Catalog />,
+  },
+  {
+    path: "/book/:id",
+    element: <BookPage />,
   },
 ]);

@@ -1,5 +1,6 @@
 export * from "./Home"
 export * from "./Login"
 export * from "./Signin"
+export * from "./Book"
 export * from "./Profile"
 export * from "./Catalog"

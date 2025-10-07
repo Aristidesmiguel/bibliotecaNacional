@@ -90,7 +90,7 @@ export const SignIn: React.FC = () => {
             marginBottom: "4px",
           }}
         >
-          Meridian Library
+          Biblioteca Nacional
         </h1>
         <h2
           style={{
@@ -101,7 +101,6 @@ export const SignIn: React.FC = () => {
             marginBottom: "4px",
           }}
         >
-          Criar conta
         </h2>
         <p
           style={{

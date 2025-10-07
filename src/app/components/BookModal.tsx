@@ -2,8 +2,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Star, Calendar, BookOpen, Users } from "lucide-react";
+import { Star, Calendar , Users, Bookmark } from "lucide-react";
 import type { Book } from "../data/books";
+import { useEffect, useState } from "react";
+import { cancelarReserva, carregarReservas, reservarLivro } from "../dataBase";
+import { toast } from "sonner";
+import { useParams } from "react-router-dom";
 
 
 interface BookModalProps {
@@ -13,9 +17,56 @@ interface BookModalProps {
 }
 
 export const BookModal = ({ book, isOpen, onClose }: BookModalProps) => {
+  const [hasActiveReservation, setHasActiveReservation] = useState(false);
+  const [reserveId, setReserveId] = useState<any | null>(null);
+  const id = useParams()
   const isAvailable = book.available > 0;
   const availabilityStatus = isAvailable ? "Available" : "Out of Stock";
   const availabilityColor = isAvailable ? "text-green-600" : "text-red-600";
+
+  useEffect(() => {
+      async function checkReservation() {
+        const reservas = await carregarReservas();
+        const ativa = reservas.find(
+          (r: any) => r.bookId === id && r.status === "ativa"
+        );
+  
+        if (ativa) {
+          setHasActiveReservation(true);
+          setReserveId(ativa.id);
+        } else {
+          setHasActiveReservation(false);
+          setReserveId(null);
+        }
+      }
+  
+      checkReservation();
+    }, [id]);
+  
+    // 🔹 Reservar livro
+    const handleReserva = async (book: Book) => {
+      try {
+        await reservarLivro(book);
+        toast.success(`Livro "${book.title}" reservado com sucesso!`);
+        setHasActiveReservation(true);
+      } catch (error) {
+        console.error("Erro ao reservar livro:", error);
+        toast.error("Erro ao reservar o livro. Tente novamente mais tarde.");
+      }
+    };
+  
+    // 🔹 Cancelar reserva
+    const handleCancelar = async (book: Book) => {
+      try {
+        if (!reserveId) return;
+        await cancelarReserva(reserveId);
+        toast.info(`Reserva do livro "${book.title}" foi cancelada.`);
+        setHasActiveReservation(false);
+      } catch (error) {
+        console.error("Erro ao cancelar reserva:", error);
+        toast.error("Erro ao cancelar a reserva. Tente novamente mais tarde.");
+      }
+    };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}    >
@@ -37,13 +88,21 @@ export const BookModal = ({ book, isOpen, onClose }: BookModalProps) => {
             
             {/* Action Buttons */}
             <div className="flex gap-6 mt-6">
-              <Button 
-                className="flex-1 btn-library"
-                disabled={!isAvailable}
+              {hasActiveReservation ? (
+              <Button
+                onClick={() => handleCancelar(book)}
+                className="bg-red-600 cursor-pointer hover:bg-red-700 flex items-center gap-2"
               >
-                <BookOpen className="w-4 h-4 mr-2" />
-                {isAvailable ? "Reserve Book" : "Unavailable"}
+                <Bookmark className="w-4 h-4" /> Cancelar Reserva
               </Button>
+            ) : (
+              <Button
+                onClick={() => handleReserva(book)}
+                className="bg-blue-600 cursor-pointer hover:bg-blue-700 flex items-center gap-2"
+              >
+                <Bookmark className="w-4 h-4" /> Reservar Livro
+              </Button>
+            )}
               <Button variant="outline" className="flex-1">
                 <Users className="w-4 h-4 mr-2" />
                 Add to Wishlist

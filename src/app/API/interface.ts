@@ -1,9 +1,9 @@
 export interface Book {
      id: string,
       volumeInfo: {
-        title:string,
+        title: string,
         authors: [],
-    publishedDate: "1997",
+    publishedDate: number,
         description: string,
         categories: [],
         averageRating: number,

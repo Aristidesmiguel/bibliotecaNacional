@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { DropdownProfile } from "./DropdownProfile";
 import { useAuth } from "../hooks/useAurh";
 import { useState, useEffect } from "react";
-import { CHAVE_API, type Book } from "../API";
+import { CHAVE_API } from "../API";
 import { Badge } from "@/components/ui/badge";
+import { InfoCard } from "./infoCard";
 
 interface HeaderProps {
   type?: "default" | "minimal";
@@ -14,14 +15,15 @@ interface HeaderProps {
 
 export const Header = ({ type }: HeaderProps) => {
   const { user } = useAuth();
+  const [query, setQuery] = useState("");
+  const [livros, setLivros] = useState<any[]>([]);
+  const [showResults, setShowResults] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   const navigate = useNavigate();
   const router = (path: string) => {
     navigate(path);
   };
-
-  const [query, setQuery] = useState("");
-  const [livros, setLivros] = useState<any[]>([]);
-  const [showResults, setShowResults] = useState(false);
 
   // 🔍 Faz a pesquisa automaticamente quando o usuário digita
   useEffect(() => {
@@ -41,6 +43,7 @@ export const Header = ({ type }: HeaderProps) => {
         const data = await res.json();
         setLivros(data.items || []);
         setShowResults(true);
+        console.log(data.items);
       } catch (err) {
         console.error("Erro ao buscar livros:", err);
       }
@@ -51,13 +54,14 @@ export const Header = ({ type }: HeaderProps) => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <InfoCard isOpen={isOpen} onClose={() => setIsOpen(false)} />
       <div className="container flex h-16 items-center justify-between px-4">
         <Link
           to="/"
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
           <BookOpen className="h-6 w-6 text-accent" />
-          <span className="text-xl font-bold">Meridian Library</span>
+          <span className="text-xl font-bold">Biblioteca Nacional</span>
         </Link>
 
         {type !== "minimal" && (
@@ -82,14 +86,20 @@ export const Header = ({ type }: HeaderProps) => {
                   <div
                     key={i}
                     className="p-2 hover:bg-gray-100 flex gap-2 cursor-pointer text-sm"
-                    onMouseDown={() => navigate(`/book/${livro.id}`)}
+                    onMouseDown={() => {
+                      user ? navigate(`/book/${livro.id}`) : setIsOpen(true);
+                    }}
                   >
-                    <img className="w-20 h-30" src={livro.volumeInfo.imageLinks.thumbnail} alt={livro.volumeInfo.title} />
+                    <img
+                      className="w-20 h-30"
+                      src={livro.volumeInfo.imageLinks.thumbnail}
+                      alt={livro.volumeInfo.title}
+                    />
                     <div className="flex gap-2 flex-col w-full">
                       {livro.volumeInfo?.title || "Sem título"}
-                    <Badge variant="secondary" className="">
-                      {livro.volumeInfo?.categories || "Sem categoria"}
-                    </Badge>
+                      <Badge variant="secondary" className="">
+                        {livro.volumeInfo?.categories || "Sem categoria"}
+                      </Badge>
                     </div>
                   </div>
                 ))}

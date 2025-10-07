@@ -84,7 +84,6 @@ export const Login: React.FC = () => {
             marginBottom: "20px",
           }}
         >
-          Bem-vindo de volta <br />
           <span style={{ fontSize: "14px" }}>
             Entre na sua conta para continuar
           </span>

@@ -199,7 +199,7 @@ export const Catalog = () => {
             <div className="flex-1">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold">
-                  {filteredBooks.length} blivros encontrados
+                  {filteredBooks.length} livros encontrados
                 </h2>
                 <div className="flex items-center gap-2">
                   <ArrowUpDown className="h-4 w-4 text-muted-foreground" />

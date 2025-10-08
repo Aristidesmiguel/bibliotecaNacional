@@ -11,7 +11,7 @@ export const Login: React.FC = () => {
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Função para lidar com o envio do formulário
+  // Função para lidar com o envio do formulário da página de login
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

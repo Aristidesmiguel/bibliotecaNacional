@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Star,
-  Calendar,
-  CheckCircle,
-  ArrowLeft,
-  Bookmark,
-} from "lucide-react";
+import { Star, Calendar, CheckCircle, ArrowLeft, Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CHAVE_API } from "@/app/API";
@@ -89,14 +83,14 @@ export function BookPage() {
 
   useEffect(() => {
     async function checkList() {
-      const reservas = await carregarListas();
-      const ativa = reservas.find(
-        (r: any) => r.bookId === id && r.status === "ativa"
+      const listas = await carregarListas();
+      const listado = listas.find(
+        (r: any) => r.bookId === id && r.status === "listado"
       );
 
-      if (ativa) {
+      if (listado) {
         setHasList(true);
-        setReserveId(ativa.id);
+        setListaId(listado.id);
       } else {
         setHasList(false);
         setListaId(null);
